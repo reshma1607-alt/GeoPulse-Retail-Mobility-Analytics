@@ -1,0 +1,22 @@
+project:
+  name: "GeoPulse"
+  description: "Hyper-Local Retail Mobility Analytics"
+
+data:
+  num_devices: 1000
+  observations_per_device: 50
+
+city:
+  name: "Guntur"
+  center_latitude: 16.3067
+  center_longitude: 80.4365
+
+stores:
+  catchment_radius_meters: 500
+
+analytics:
+  timezone: "Asia/Kolkata"
+  peak_morning_start: 7
+  peak_morning_end: 10
+  peak_evening_start: 17
+  peak_evening_end: 21
