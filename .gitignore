@@ -9,6 +9,7 @@ env/
 data/raw/
 data/processed/
 *.csv
+!data/sample/*.csv
 
 node_modules/
 dashboard/node_modules/

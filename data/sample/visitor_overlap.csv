@@ -1,0 +1,11 @@
+StoreA,StoreAName,StoreB,StoreBName,VisitorsStoreA,VisitorsStoreB,SharedVisitors,OverlapPercentage
+S001,GeoPulse Store A,S002,GeoPulse Store B,996,983,982,98.5
+S001,GeoPulse Store A,S003,GeoPulse Store C,996,970,967,96.8
+S001,GeoPulse Store A,S004,GeoPulse Store D,996,985,981,98.1
+S001,GeoPulse Store A,S005,GeoPulse Store E,996,975,972,97.3
+S002,GeoPulse Store B,S003,GeoPulse Store C,983,970,954,95.5
+S002,GeoPulse Store B,S004,GeoPulse Store D,983,985,968,96.8
+S002,GeoPulse Store B,S005,GeoPulse Store E,983,975,960,96.19
+S003,GeoPulse Store C,S004,GeoPulse Store D,970,985,956,95.7
+S003,GeoPulse Store C,S005,GeoPulse Store E,970,975,946,94.69
+S004,GeoPulse Store D,S005,GeoPulse Store E,985,975,960,96.0

@@ -1,0 +1,6 @@
+StoreID,StoreName,CatchmentRadiusMeters,GPSObservations,UniqueVisitors
+S001,GeoPulse Store A,500,10980,996
+S002,GeoPulse Store B,500,8815,983
+S003,GeoPulse Store C,500,7920,970
+S004,GeoPulse Store D,500,7701,985
+S005,GeoPulse Store E,500,6749,975

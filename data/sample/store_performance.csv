@@ -1,0 +1,6 @@
+StoreID,StoreName,CatchmentRadiusMeters,GPSObservations,UniqueVisitors,VisitorSharePercentage,FootfallRank
+S001,GeoPulse Store A,500,10980,996,20.28926461601141,1
+S004,GeoPulse Store D,500,7701,985,20.065186392340596,2
+S002,GeoPulse Store B,500,8815,983,20.024444897127726,3
+S005,GeoPulse Store E,500,6749,975,19.861478916276226,4
+S003,GeoPulse Store C,500,7920,970,19.759625178244043,5

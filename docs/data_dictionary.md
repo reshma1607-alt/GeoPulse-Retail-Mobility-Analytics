@@ -44,3 +44,32 @@ potential store locations.
 ### Catchment Area
 A geographic area around a store used to identify nearby mobility
 activity.
+
+## GPS Data Generation
+
+The GeoPulse project uses synthetic anonymized GPS mobility data for development and analysis.
+
+The initial dataset contains:
+
+- 1,000 anonymized devices
+- 50 observations per device
+- 50,000 total GPS observations
+- Latitude and Longitude coordinates
+- Timestamp for each observation
+- Synthetic movement around the defined city area
+- Increased movement around retail locations during morning and evening peak periods
+
+The raw generated dataset is stored locally in `data/raw/` and is excluded from GitHub using `.gitignore`.
+
+A smaller representative sample is stored in `data/sample/` for demonstration and testing.
+
+## Analytics Outputs
+
+The initial analytics pipeline produces:
+
+1. GPS data validation
+2. Overall mobility summary
+3. Store-level footfall analysis
+4. Hourly footfall analysis
+
+These outputs will later support the geospatial processing, catchment analysis, cannibalization analysis, and dashboard stages of GeoPulse.
