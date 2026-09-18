@@ -663,3 +663,102 @@ The current Python and Pandas implementation provides a structured starting poin
 The future implementation will extend this foundation using Snowflake, Apache Sedona, PySpark, dbt, Kepler.gl, React, and other planned geospatial components.
 
 Overall, the pipeline demonstrates how raw mobility observations can be transformed into structured retail mobility metrics that can support further geospatial analysis and visualization.
+## Sedona Spatial Analytics
+
+Apache Sedona is used to perform spatial analytics on the GeoPulse GPS dataset.
+
+### 1. Spatial Join
+
+GPS points are converted into spatial geometries using `ST_Point`.
+
+Each GPS observation is matched with stores within a 500-meter radius using:
+
+`ST_DistanceSphere(store_geometry, gps_geometry) <= 500`
+
+The spatial join identifies GPS observations associated with each store.
+
+### 2. Distance Analysis
+
+The distance between each GPS observation and the corresponding store is calculated in meters.
+
+The analysis provides:
+
+- Average distance
+- Minimum distance
+- Maximum distance
+- Unique visitors per store
+
+### 3. Catchment Analysis
+
+Store catchment areas are analyzed using three distance thresholds:
+
+- 100 meters
+- 250 meters
+- 500 meters
+
+The analysis calculates the number of observations falling within each distance threshold.
+
+The percentage of observations within 250 meters is also calculated.
+
+### 4. Visitor Overlap Analysis
+
+Visitor overlap identifies devices that appear within the 500-meter catchment of multiple stores.
+
+Store pairs are compared using their shared visitor counts.
+
+The overlap percentage provides a measure of how strongly the visitor populations of two stores intersect.
+
+### 5. Cannibalization Indicator
+
+A development-stage cannibalization indicator is calculated using:
+
+`Shared Visitors / Smaller Store Visitor Base × 100`
+
+The indicator is categorized as:
+
+- Low: below 25%
+- Medium: 25% to below 50%
+- High: 50% or above
+
+This indicator represents visitor-base overlap and should not be interpreted as direct measurement of lost sales.
+
+### 6. Consolidated Sedona Summary
+
+The `sedona_summary.py` script combines the major Sedona results into a store-level summary.
+
+Output:
+
+`data/sample/geopulse_sedona_summary.csv`
+
+The summary contains:
+
+- GPS observations
+- Unique visitors
+- Average distance
+- Minimum distance
+- Maximum distance
+- Percentage within 250 meters
+- Visitor rank
+
+### 7. Sedona Data Validation
+
+The `validate_sedona.py` script checks the quality of Sedona outputs.
+
+Validation includes:
+
+- Missing store IDs
+- Missing device IDs
+- Invalid distances
+- Distances greater than 500 meters
+- Invalid catchment percentages
+- Duplicate store pairs
+- Invalid shared visitor counts
+- Invalid cannibalization indicators
+
+### 8. Complete Analytics Pipeline
+
+The complete GeoPulse pipeline can be executed using:
+
+`python src/analytics/run_pipeline.py`
+
+The pipeline currently contains 15 processing and validation steps covering data validation, mobility analytics, store analytics, visitor analysis, and Sedona spatial analytics.

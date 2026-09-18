@@ -25,3 +25,4 @@ dashboard/dist/
 
 .DS_Store
 Thumbs.db
+*.crc

@@ -1,0 +1,6 @@
+StoreID,StoreName,GPS_Observations,Unique_Visitors,Average_Distance_Meters,Minimum_Distance_Meters,Maximum_Distance_Meters,Percent_Within_250m,Visitor_Rank
+S001,GeoPulse Store A,10979,996,321.79,5.66,499.99,28.52,1
+S004,GeoPulse Store D,7701,985,316.77,1.54,499.98,29.94,2
+S002,GeoPulse Store B,8815,983,316.51,3.09,499.98,30.72,3
+S005,GeoPulse Store E,6749,975,316.21,4.31,499.9,30.67,4
+S003,GeoPulse Store C,7920,970,317.12,3.16,499.97,30.39,5

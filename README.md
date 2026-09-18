@@ -285,3 +285,22 @@ The system will combine data engineering, geospatial processing, analytics, and 
 Project: GeoPulse - Hyper-Local Retail Mobility Analytics
 
 Status: Development in Progress
+## Running the Analytics Pipeline
+
+### Step 1: Generate GPS Data
+
+```bash
+python src/data_generation/generate_gps.py
+```
+
+### Step 2: Validate GPS Data
+
+```bash
+python src/validation/validate_gps.py
+```
+
+### Step 3: Run Complete Analytics Pipeline
+
+```bash
+python src/analytics/run_pipeline.py
+```
