@@ -26,3 +26,8 @@ dashboard/dist/
 .DS_Store
 Thumbs.db
 *.crc
+# Sedona generated output
+data/sample/cannibalization_sedona/
+data/sample/store_catchment_analysis/
+data/sample/store_distance_analysis/
+data/sample/visitor_overlap_sedona/
