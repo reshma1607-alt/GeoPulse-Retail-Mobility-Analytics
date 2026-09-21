@@ -4,8 +4,10 @@ import GeoPulseMap from './GeoPulseMap'
 
 function App() {
   const [stores, setStores] = useState([])
-  const [sedonaStores, setSedonaStores] = useState([])
-  const [hourlyData, setHourlyData] = useState([])
+const [sedonaStores, setSedonaStores] = useState([])
+const [hourlyData, setHourlyData] = useState([])
+const [visitorOverlap, setVisitorOverlap] = useState([])
+const [cannibalization, setCannibalization] = useState([])
   useEffect(() => {
     fetch('/data/store_performance.csv')
       .then((response) => response.text())
@@ -85,7 +87,54 @@ function App() {
     .catch((error) => {
       console.error('Error loading hourly data:', error)
     })
-}, []) 
+}, [])
+  // Load Visitor Overlap Data
+  useEffect(() => {
+    fetch('/data/visitor_overlap.csv')
+      .then((response) => response.text())
+      .then((text) => {
+        const rows = text.trim().split('\n')
+        const headers = rows[0].split(',').map((header) => header.trim())
+
+        const data = rows.slice(1).map((row) => {
+          const values = row.split(',').map((value) => value.trim())
+
+          return headers.reduce((object, header, index) => {
+            object[header] = values[index]
+            return object
+          }, {})
+        })
+
+        setVisitorOverlap(data)
+      })
+      .catch((error) => {
+        console.error('Error loading visitor overlap data:', error)
+      })
+  }, [])
+
+  // Load Cannibalization Data
+  useEffect(() => {
+    fetch('/data/cannibalization_analysis.csv')
+      .then((response) => response.text())
+      .then((text) => {
+        const rows = text.trim().split('\n')
+        const headers = rows[0].split(',').map((header) => header.trim())
+
+        const data = rows.slice(1).map((row) => {
+          const values = row.split(',').map((value) => value.trim())
+
+          return headers.reduce((object, header, index) => {
+            object[header] = values[index]
+            return object
+          }, {})
+        })
+
+        setCannibalization(data)
+      })
+      .catch((error) => {
+        console.error('Error loading cannibalization data:', error)
+      })
+  }, [])
 
   return (
     <div className="app">
@@ -281,6 +330,74 @@ function App() {
       </div>
     ))}
   </div>
+</section>
+{/* VISITOR OVERLAP ANALYSIS */}
+<section className="panel">
+  <h3>Visitor Overlap Analysis</h3>
+
+  <p>
+    Shared visitors between different retail stores.
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Store A</th>
+        <th>Store B</th>
+        <th>Shared Visitors</th>
+        <th>Overlap</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {visitorOverlap.map((item, index) => (
+        <tr key={`${item.StoreA}-${item.StoreB}-${index}`}>
+          <td>{item.StoreA}</td>
+          <td>{item.StoreB}</td>
+          <td>
+            {Number(item.SharedVisitors).toLocaleString()}
+          </td>
+          <td>{Number(item.OverlapPercentage).toFixed(2)}%</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</section>
+{/* CANNIBALIZATION ANALYSIS */}
+<section className="panel">
+  <h3>Cannibalization Analysis</h3>
+
+  <p>
+    Store pairs with overlapping visitors and cannibalization indicators.
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Store A</th>
+        <th>Store B</th>
+        <th>Shared Visitors</th>
+        <th>Cannibalization</th>
+        <th>Indicator</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {cannibalization.map((item, index) => (
+        <tr key={`${item.StoreA}-${item.StoreB}-${index}`}>
+          <td>{item.StoreA}</td>
+          <td>{item.StoreB}</td>
+          <td>
+            {Number(item.SharedVisitors).toLocaleString()}
+          </td>
+          <td>
+            {Number(item.CannibalizationPercentage).toFixed(2)}%
+          </td>
+          <td>{item.CannibalizationIndicator}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
 </section>
 
         {/* ANALYTICS GRID */}
