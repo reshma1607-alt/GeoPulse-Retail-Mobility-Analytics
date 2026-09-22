@@ -8,6 +8,7 @@ const [sedonaStores, setSedonaStores] = useState([])
 const [hourlyData, setHourlyData] = useState([])
 const [visitorOverlap, setVisitorOverlap] = useState([])
 const [cannibalization, setCannibalization] = useState([])
+const [searchTerm, setSearchTerm] = useState('')
   useEffect(() => {
     fetch('/data/store_performance.csv')
       .then((response) => response.text())
@@ -135,6 +136,24 @@ const [cannibalization, setCannibalization] = useState([])
         console.error('Error loading cannibalization data:', error)
       })
   }, [])
+    const totalPairs = visitorOverlap.length
+
+  const averageOverlap =
+    visitorOverlap.length > 0
+      ? (
+          visitorOverlap.reduce(
+            (sum, item) => sum + Number(item.OverlapPercentage),
+            0
+          ) / visitorOverlap.length
+        ).toFixed(2)
+      : '0'
+
+  const highCannibalization = cannibalization.filter(
+    (item) => item.CannibalizationIndicator === 'High'
+  ).length
+    const filteredStores = stores.filter((store) =>
+    store.StoreName.toLowerCase().includes(searchTerm.toLowerCase())
+  )
 
   return (
     <div className="app">
@@ -207,8 +226,33 @@ const [cannibalization, setCannibalization] = useState([])
             <span>500m Catchment</span>
             <strong>42,164</strong>
           </div>
+          <div className="kpi-card">
+  <span>Store Pairs Analyzed</span>
+  <strong>{totalPairs}</strong>
+</div>
+
+<div className="kpi-card">
+  <span>Average Visitor Overlap</span>
+  <strong>{averageOverlap}%</strong>
+</div>
+
+<div className="kpi-card">
+  <span>High Cannibalization Pairs</span>
+  <strong>{highCannibalization}</strong>
+</div>
 
         </section>
+        <div className="search-panel">
+  <label htmlFor="store-search">Search Store</label>
+
+  <input
+    id="store-search"
+    type="text"
+    placeholder="Search by store name..."
+    value={searchTerm}
+    onChange={(event) => setSearchTerm(event.target.value)}
+  />
+</div>
 
         {/* STORE PERFORMANCE */}
         <section className="panel">
@@ -226,7 +270,7 @@ const [cannibalization, setCannibalization] = useState([])
             </thead>
 
             <tbody>
-              {stores.map((store) => (
+              {filteredStores.map((store) => (
                 <tr key={store.StoreID}>
                   <td>{store.StoreName}</td>
 
