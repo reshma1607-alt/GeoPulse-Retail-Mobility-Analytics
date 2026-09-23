@@ -1,5 +1,14 @@
 import { useEffect, useState } from 'react'
 import './App.css'
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer
+} from 'recharts'
 import GeoPulseMap from './GeoPulseMap'
 
 function App() {
@@ -9,6 +18,7 @@ const [hourlyData, setHourlyData] = useState([])
 const [visitorOverlap, setVisitorOverlap] = useState([])
 const [cannibalization, setCannibalization] = useState([])
 const [searchTerm, setSearchTerm] = useState('')
+const [minFootfall, setMinFootfall] = useState(0)
   useEffect(() => {
     fetch('/data/store_performance.csv')
       .then((response) => response.text())
@@ -151,9 +161,11 @@ const [searchTerm, setSearchTerm] = useState('')
   const highCannibalization = cannibalization.filter(
     (item) => item.CannibalizationIndicator === 'High'
   ).length
-    const filteredStores = stores.filter((store) =>
-    store.StoreName.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+    const filteredStores = stores.filter(
+  (store) =>
+    store.StoreName.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    Number(store.GPSObservations || 0) >= minFootfall
+)
 
   return (
     <div className="app">
@@ -253,6 +265,26 @@ const [searchTerm, setSearchTerm] = useState('')
     onChange={(event) => setSearchTerm(event.target.value)}
   />
 </div>
+<div className="search-panel">
+  <label htmlFor="min-footfall">Minimum Footfall</label>
+
+  <input
+    id="min-footfall"
+    type="number"
+    min="0"
+    placeholder="Enter minimum footfall"
+    value={minFootfall}
+    onChange={(event) => setMinFootfall(Number(event.target.value))}
+  />
+</div>
+<button
+  onClick={() => {
+    setSearchTerm('')
+    setMinFootfall(0)
+  }}
+>
+  Reset Filters
+</button>
 
         {/* STORE PERFORMANCE */}
         <section className="panel">
@@ -300,6 +332,20 @@ const [searchTerm, setSearchTerm] = useState('')
             </tbody>
           </table>
         </section>
+        <section className="panel">
+  <h3>Store Footfall Comparison</h3>
+
+  <ResponsiveContainer width="100%" height={300}>
+    <BarChart data={filteredStores}>
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis dataKey="StoreName" />
+      <YAxis />
+      <Tooltip />
+      <Bar dataKey="GPSObservations" fill="#4f46e5" />
+    </BarChart>
+  </ResponsiveContainer>
+</section>
+
         {/* SEDONA DISTANCE ANALYSIS */}
 <section className="panel">
   <h3>Store Catchment & Distance Analysis</h3>
@@ -407,6 +453,20 @@ const [searchTerm, setSearchTerm] = useState('')
     </tbody>
   </table>
 </section>
+<section className="panel">
+  <h3>Visitor Overlap Comparison</h3>
+
+  <ResponsiveContainer width="100%" height={350}>
+    <BarChart data={visitorOverlap}>
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis dataKey="StoreBName" />
+      <YAxis />
+      <Tooltip />
+      <Bar dataKey="OverlapPercentage" fill="#14b8a6" />
+    </BarChart>
+  </ResponsiveContainer>
+</section>
+
 {/* CANNIBALIZATION ANALYSIS */}
 <section className="panel">
   <h3>Cannibalization Analysis</h3>
