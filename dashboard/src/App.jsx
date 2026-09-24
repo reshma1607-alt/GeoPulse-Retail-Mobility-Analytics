@@ -340,7 +340,9 @@ const [minFootfall, setMinFootfall] = useState(0)
       <CartesianGrid strokeDasharray="3 3" />
       <XAxis dataKey="StoreName" />
       <YAxis />
-      <Tooltip />
+      <Tooltip
+  formatter={(value) => [`${value}%`, 'Visitor Overlap']}
+/>
       <Bar dataKey="GPSObservations" fill="#4f46e5" />
     </BarChart>
   </ResponsiveContainer>
@@ -456,10 +458,19 @@ const [minFootfall, setMinFootfall] = useState(0)
 <section className="panel">
   <h3>Visitor Overlap Comparison</h3>
 
+<p>
+  Compare shared visitor percentages across retail store pairs.
+</p>
+
   <ResponsiveContainer width="100%" height={350}>
     <BarChart data={visitorOverlap}>
       <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="StoreBName" />
+      <XAxis
+  dataKey="StoreBName"
+  angle={-35}
+  textAnchor="end"
+  height={80}
+/>
       <YAxis />
       <Tooltip />
       <Bar dataKey="OverlapPercentage" fill="#14b8a6" />
