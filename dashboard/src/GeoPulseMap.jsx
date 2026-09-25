@@ -92,49 +92,58 @@ function GeoPulseMap() {
     <strong>{store.StoreName}</strong>
   </Tooltip>
 
-  <Popup>
+ <Popup>
   {(() => {
     const storePerformance = performance.find(
       (item) => item.StoreID === store.StoreID
     )
 
     return (
-      <>
-        <strong>{store.StoreName}</strong>
+      <div className="store-popup">
+        <h4>{store.StoreName}</h4>
 
-        <br />
-        <br />
+        <div className="popup-divider"></div>
 
-        <strong>Store ID:</strong> {store.StoreID}
+        <p>
+          <strong>Store ID:</strong>{' '}
+          {store.StoreID}
+        </p>
 
-        <br />
+        <p>
+          <strong>GPS Observations:</strong>{' '}
+          {storePerformance?.GPSObservations ?? 'N/A'}
+        </p>
 
-        <strong>GPS Observations:</strong>{' '}
-        {storePerformance?.GPSObservations || 'N/A'}
+        <p>
+          <strong>Unique Visitors:</strong>{' '}
+          {storePerformance?.UniqueVisitors ?? 'N/A'}
+        </p>
 
-        <br />
+        <p>
+          <strong>Visitor Share:</strong>{' '}
+          {storePerformance
+            ? `${Number(
+                storePerformance.VisitorSharePercentage
+              ).toFixed(2)}%`
+            : 'N/A'}
+        </p>
 
-        <strong>Unique Visitors:</strong>{' '}
-        {storePerformance?.UniqueVisitors || 'N/A'}
+        <p>
+          <strong>Footfall Rank:</strong>{' '}
+          {storePerformance
+            ? `#${storePerformance.FootfallRank}`
+            : 'N/A'}
+        </p>
 
-        <br />
+        <p>
+          <strong>Catchment Radius:</strong>{' '}
+          500 m
+        </p>
 
-        <strong>Visitor Share:</strong>{' '}
-        {storePerformance
-          ? `${Number(storePerformance.VisitorSharePercentage).toFixed(2)}%`
-          : 'N/A'}
-
-        <br />
-
-        <strong>Footfall Rank:</strong>{' '}
-        {storePerformance
-          ? `#${storePerformance.FootfallRank}`
-          : 'N/A'}
-
-        <br />
-
-        <strong>Catchment Radius:</strong> 500 m
-      </>
+        <div className="popup-status">
+          <span>●</span> Active Retail Location
+        </div>
+      </div>
     )
   })()}
 </Popup>
