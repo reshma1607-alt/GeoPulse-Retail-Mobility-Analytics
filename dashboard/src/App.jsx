@@ -372,6 +372,49 @@ function App() {
         ).toLowerCase() === 'high'
     )
     .slice(0, 5)
+    /* =======================================================
+     EXECUTIVE INSIGHTS
+     ======================================================= */
+
+  const topStore = topStores[0] || null
+
+  const highestVisitorStore =
+    [...stores].sort(
+      (a, b) =>
+        numberValue(b.UniqueVisitors) -
+        numberValue(a.UniqueVisitors)
+    )[0] || null
+
+  const closestCatchment =
+    [...sedonaStores].sort(
+      (a, b) =>
+        numberValue(a.Average_Distance_Meters) -
+        numberValue(b.Average_Distance_Meters)
+    )[0] || null
+
+  const highestOverlapPair =
+    [...visitorOverlap].sort(
+      (a, b) =>
+        numberValue(b.OverlapPercentage) -
+        numberValue(a.OverlapPercentage)
+    )[0] || null
+
+  const peakHour =
+    [...hourlyData].sort(
+      (a, b) =>
+        numberValue(
+          b.UniqueVisitors ??
+          b.Visitors ??
+          b.Footfall ??
+          b.GPSObservations
+        ) -
+        numberValue(
+          a.UniqueVisitors ??
+          a.Visitors ??
+          a.Footfall ??
+          a.GPSObservations
+        )
+    )[0] || null
 
   /* =======================================================
      RESET
@@ -1446,6 +1489,131 @@ function App() {
         </footer>
 
       </main>
+      <section className="executive-insights">
+
+  <div className="insights-heading">
+    <div>
+      <span className="section-kicker">EXECUTIVE INTELLIGENCE</span>
+      <h2>Key Mobility Findings</h2>
+      <p>Automatically derived from the current GeoPulse dataset.</p>
+    </div>
+
+    <div className="insight-status">
+      <span></span>
+      ANALYSIS READY
+    </div>
+  </div>
+
+  <div className="insight-grid">
+
+    <div className="insight-card insight-cyan">
+      <div className="insight-icon">🏆</div>
+      <div className="insight-content">
+        <span>TOP FOOTFALL STORE</span>
+        <strong>
+          {topStore ? storeName(topStore) : '—'}
+        </strong>
+        <small>
+          {topStore
+            ? `${formatNumber(topStore.GPSObservations)} observations`
+            : 'No data available'}
+        </small>
+      </div>
+    </div>
+
+    <div className="insight-card insight-purple">
+      <div className="insight-icon">👥</div>
+      <div className="insight-content">
+        <span>VISITOR LEADER</span>
+        <strong>
+          {highestVisitorStore
+            ? storeName(highestVisitorStore)
+            : '—'}
+        </strong>
+        <small>
+          {highestVisitorStore
+            ? `${formatNumber(highestVisitorStore.UniqueVisitors)} unique visitors`
+            : 'No data available'}
+        </small>
+      </div>
+    </div>
+
+    <div className="insight-card insight-blue">
+      <div className="insight-icon">📍</div>
+      <div className="insight-content">
+        <span>CLOSEST CATCHMENT</span>
+        <strong>
+          {closestCatchment
+            ? closestCatchment.StoreName ||
+              closestCatchment.Store ||
+              'Store'
+            : '—'}
+        </strong>
+        <small>
+          {closestCatchment
+            ? `${numberValue(closestCatchment.Average_Distance_Meters).toFixed(0)} m average distance`
+            : 'No data available'}
+        </small>
+      </div>
+    </div>
+
+    <div className="insight-card insight-pink">
+      <div className="insight-icon">◉</div>
+      <div className="insight-content">
+        <span>HIGHEST VISITOR OVERLAP</span>
+        <strong>
+          {highestOverlapPair
+            ? `${highestOverlapPair.StoreA} ↔ ${highestOverlapPair.StoreB}`
+            : '—'}
+        </strong>
+        <small>
+          {highestOverlapPair
+            ? `${numberValue(highestOverlapPair.OverlapPercentage).toFixed(2)}% visitor overlap`
+            : 'No data available'}
+        </small>
+      </div>
+    </div>
+
+    <div className="insight-card insight-orange">
+      <div className="insight-icon">⚡</div>
+      <div className="insight-content">
+        <span>PEAK ACTIVITY</span>
+        <strong>
+          {peakHour
+            ? peakHour.Hour ??
+              peakHour.hour ??
+              peakHour.HourOfDay ??
+              '—'
+            : '—'}
+        </strong>
+        <small>
+          {peakHour
+            ? `${formatNumber(
+                peakHour.UniqueVisitors ??
+                peakHour.Visitors ??
+                peakHour.Footfall ??
+                peakHour.GPSObservations
+              )} activity`
+            : 'No data available'}
+        </small>
+      </div>
+    </div>
+
+    <div className="insight-card insight-green">
+      <div className="insight-icon">⚠</div>
+      <div className="insight-content">
+        <span>HIGH-OVERLAP PAIRS</span>
+        <strong>{highCannibalization}</strong>
+        <small>Store pairs flagged by the current analysis</small>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+
+      
       <section className="advanced-analytics">
   <div className="section-heading">
     <div>
@@ -1469,7 +1637,18 @@ function App() {
       </div>
 
       <div className="donut-wrapper">
-        <div className="donut-chart">
+        <div
+  className="donut-chart"
+  style={{
+    background: `conic-gradient(
+      var(--cyan) 0% ${numberValue(stores[0]?.VisitorSharePercentage)},
+      var(--purple) ${numberValue(stores[0]?.VisitorSharePercentage)}% ${numberValue(stores[0]?.VisitorSharePercentage) + numberValue(stores[1]?.VisitorSharePercentage)}%,
+      var(--pink) ${numberValue(stores[0]?.VisitorSharePercentage) + numberValue(stores[1]?.VisitorSharePercentage)}% ${numberValue(stores[0]?.VisitorSharePercentage) + numberValue(stores[1]?.VisitorSharePercentage) + numberValue(stores[2]?.VisitorSharePercentage)}%,
+      var(--orange) ${numberValue(stores[0]?.VisitorSharePercentage) + numberValue(stores[1]?.VisitorSharePercentage) + numberValue(stores[2]?.VisitorSharePercentage)}% ${numberValue(stores[0]?.VisitorSharePercentage) + numberValue(stores[1]?.VisitorSharePercentage) + numberValue(stores[2]?.VisitorSharePercentage) + numberValue(stores[3]?.VisitorSharePercentage)}%,
+      var(--green) ${numberValue(stores[0]?.VisitorSharePercentage) + numberValue(stores[1]?.VisitorSharePercentage) + numberValue(stores[2]?.VisitorSharePercentage) + numberValue(stores[3]?.VisitorSharePercentage)}% 100%
+    )`
+  }}
+>
           <div className="donut-center">
             <strong>{stores.length}</strong>
             <span>Stores</span>
