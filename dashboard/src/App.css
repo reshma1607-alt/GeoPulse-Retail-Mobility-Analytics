@@ -2704,88 +2704,190 @@ button {
 .fill-4 {
   background: linear-gradient(90deg, var(--green), var(--cyan));
 }
-
-
-/* =========================================================
-   HOURLY TRAFFIC
-   ========================================================= */
-
 .hourly-advanced-chart {
-  height: 205px;
+  width: 100%;
+  height: 300px;
+
   display: flex;
   align-items: flex-end;
+
   gap: 8px;
-  padding: 5px 5px 0;
-  border-bottom: 1px solid rgba(255,255,255,.08);
+
+  padding: 20px 10px 0;
+
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .hour-column {
-  flex: 1;
-  min-width: 0;
+  flex: 1 0 28px;
+  min-width: 28px;
   height: 100%;
+
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
   align-items: center;
-  gap: 5px;
-}
+  justify-content: flex-end;
 
-.hour-column > span {
-  color: #66748b;
-  font-size: 9px;
-  white-space: nowrap;
+  position: relative;
 }
 
 .hour-value {
-  color: #8c9ab0;
-  font-size: 8px;
-  min-height: 12px;
+  min-height: 18px;
+
+  margin-bottom: 6px;
+
+  font-size: 9px;
+  font-weight: 600;
+
+  color:
+    rgba(255, 255, 255, 0.45);
+
+  white-space: nowrap;
 }
 
 .hour-bar-area {
-  height: 155px;
   width: 100%;
+  height: 210px;
+
   display: flex;
   align-items: flex-end;
   justify-content: center;
+
+  border-bottom:
+    1px solid rgba(255, 255, 255, 0.08);
+
+  position: relative;
+}
+
+.hour-bar-area::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    repeating-linear-gradient(
+      to top,
+      transparent 0,
+      transparent 49px,
+      rgba(255,255,255,0.035) 50px
+    );
+
+  pointer-events: none;
 }
 
 .hour-bar {
-  width: 70%;
-  min-height: 5px;
-  border-radius: 5px 5px 2px 2px;
-  transition: height .6s ease;
+  width: 72%;
+  min-height: 3px;
+
+  border-radius: 6px 6px 2px 2px;
+
+  position: relative;
+  z-index: 2;
+
+  transition:
+    height 0.5s ease,
+    transform 0.2s ease;
+
+  box-shadow:
+    0 0 12px rgba(0, 245, 255, 0.2);
 }
 
 .hour-bar:hover {
-  filter: brightness(1.5);
+  transform:
+    scaleX(1.12);
+
+  filter:
+    brightness(1.3);
 }
 
+.hour-column > span {
+  margin-top: 9px;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  color:
+    rgba(255, 255, 255, 0.5);
+}
+
+
+/* Hour colors */
+
 .hour-color-0 {
-  background: linear-gradient(to top, var(--cyan), var(--blue));
-  box-shadow: 0 0 14px rgba(0,245,255,.25);
+  background:
+    linear-gradient(
+      to top,
+      #00f5ff,
+      #008cff
+    );
 }
 
 .hour-color-1 {
-  background: linear-gradient(to top, var(--purple), var(--pink));
-  box-shadow: 0 0 14px rgba(139,0,255,.25);
+  background:
+    linear-gradient(
+      to top,
+      #008cff,
+      #8b00ff
+    );
 }
 
 .hour-color-2 {
-  background: linear-gradient(to top, var(--pink), var(--orange));
-  box-shadow: 0 0 14px rgba(255,0,200,.25);
+  background:
+    linear-gradient(
+      to top,
+      #8b00ff,
+      #ff00c8
+    );
 }
 
 .hour-color-3 {
-  background: linear-gradient(to top, var(--orange), #ffd000);
-  box-shadow: 0 0 14px rgba(255,138,0,.25);
+  background:
+    linear-gradient(
+      to top,
+      #ff00c8,
+      #ff8a00
+    );
 }
 
 .hour-color-4 {
-  background: linear-gradient(to top, var(--green), var(--cyan));
-  box-shadow: 0 0 14px rgba(0,255,156,.25);
+  background:
+    linear-gradient(
+      to top,
+      #00ff9c,
+      #00d4ff
+    );
 }
 
+
+/* Mobile */
+
+@media (max-width: 700px) {
+
+  .hourly-advanced-chart {
+    gap: 6px;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .hour-column {
+    flex-basis: 25px;
+    min-width: 25px;
+  }
+
+  .hour-bar {
+    width: 68%;
+  }
+
+  .hour-value {
+    font-size: 8px;
+  }
+
+  .hour-column > span {
+    font-size: 9px;
+  }
+}
 
 /* =========================================================
    PEAK INTELLIGENCE
@@ -2855,95 +2957,292 @@ button {
 
 
 /* =========================================================
-   VISITOR VS FOOTFALL RELATIONSHIP
-   ========================================================= */
+   VISITORS VS FOOTFALL — 2D SCATTER
+========================================================= */
 
 .relationship-chart {
   position: relative;
-  height: 215px;
-  margin-top: 15px;
 
-  border-left: 1px solid rgba(255,255,255,.1);
-  border-bottom: 1px solid rgba(255,255,255,.1);
+  width: 100%;
+  height: 300px;
+
+  margin-top: 18px;
+
+  border-left:
+    1px solid rgba(255, 255, 255, 0.12);
+
+  border-bottom:
+    1px solid rgba(255, 255, 255, 0.12);
+
+  overflow: visible;
 
   background:
-    linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+    linear-gradient(
+      to right,
+      rgba(0, 245, 255, 0.015),
+      rgba(139, 0, 255, 0.025)
+    );
 
-  background-size: 25% 25%;
+  background-image:
+    linear-gradient(
+      rgba(255,255,255,0.045) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,0.045) 1px,
+      transparent 1px
+    );
+
+  background-size:
+    20% 25%;
 }
+
+
+/* =========================
+   STORE POINT
+========================= */
 
 .relationship-point {
   position: absolute;
-  top: 42%;
-  width: 20px;
-  height: 20px;
+
+  width: 30px;
+  height: 30px;
+
+  transform:
+    translate(-50%, 50%);
+
+  z-index: 5;
 }
 
 .scatter-point {
-  width: 20px;
-  height: 20px;
-  display: grid;
-  place-items: center;
+  width: 30px;
+  height: 30px;
+
   border-radius: 50%;
-  color: #02050a;
-  font-size: 8px;
-  font-weight: 900;
-  border: 2px solid rgba(255,255,255,.7);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid #ffffff;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  color: #03060d;
+
   cursor: pointer;
-  box-shadow: 0 0 18px currentColor;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
-.scatter-0 { background: var(--cyan); color: var(--cyan); }
-.scatter-1 { background: var(--purple); color: var(--purple); }
-.scatter-2 { background: var(--pink); color: var(--pink); }
-.scatter-3 { background: var(--orange); color: var(--orange); }
-.scatter-4 { background: var(--green); color: var(--green); }
-
-.scatter-point span {
-  color: #02050a;
+.scatter-point:hover {
+  transform: scale(1.35);
 }
+
+
+/* =========================
+   NEON STORE COLORS
+========================= */
+
+.scatter-0 {
+  background: #00f5ff;
+
+  box-shadow:
+    0 0 10px #00f5ff,
+    0 0 30px rgba(0,245,255,0.65);
+}
+
+.scatter-1 {
+  background: #8b00ff;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 0 10px #8b00ff,
+    0 0 30px rgba(139,0,255,0.65);
+}
+
+.scatter-2 {
+  background: #ff00c8;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 0 10px #ff00c8,
+    0 0 30px rgba(255,0,200,0.65);
+}
+
+.scatter-3 {
+  background: #ff8a00;
+
+  box-shadow:
+    0 0 10px #ff8a00,
+    0 0 30px rgba(255,138,0,0.65);
+}
+
+.scatter-4 {
+  background: #00ff9c;
+
+  box-shadow:
+    0 0 10px #00ff9c,
+    0 0 30px rgba(0,255,156,0.65);
+}
+
+
+/* =========================
+   TOOLTIP
+========================= */
 
 .scatter-tooltip {
-  display: none;
   position: absolute;
-  left: 15px;
-  bottom: 25px;
-  width: 145px;
-  padding: 10px;
-  z-index: 10;
+
+  left: 50%;
+  bottom: 42px;
+
+  transform:
+    translateX(-50%)
+    translateY(8px);
+
+  width: 150px;
+
+  padding: 12px;
+
   border-radius: 10px;
-  background: #0a1221;
-  border: 1px solid rgba(0,245,255,.25);
-  box-shadow: 0 10px 30px rgba(0,0,0,.5);
+
+  background:
+    rgba(5, 9, 20, 0.96);
+
+  border:
+    1px solid rgba(0,245,255,0.25);
+
+  box-shadow:
+    0 10px 35px rgba(0,0,0,0.45),
+    0 0 20px rgba(0,245,255,0.08);
+
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  opacity: 0;
+  visibility: hidden;
+
+  pointer-events: none;
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+
+  z-index: 20;
 }
 
 .relationship-point:hover .scatter-tooltip {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  opacity: 1;
+  visibility: visible;
+
+  transform:
+    translateX(-50%)
+    translateY(0);
 }
 
 .scatter-tooltip strong {
-  color: #fff;
-  font-size: 11px;
+  color: #ffffff;
+
+  font-size: 12px;
 }
 
 .scatter-tooltip span {
-  color: #8492a8;
-  font-size: 9px;
+  color:
+    rgba(255,255,255,0.55);
+
+  font-size: 10px;
 }
+
+
+/* =========================
+   AXIS LABELS
+========================= */
 
 .scatter-axis {
   position: absolute;
-  left: 8px;
+
+  left: 0;
   right: 0;
-  bottom: -22px;
+  bottom: -27px;
+
   display: flex;
   justify-content: space-between;
-  color: #59677e;
-  font-size: 8px;
+
+  padding: 0 8px;
+
+  color:
+    rgba(255,255,255,0.35);
+
+  font-size: 9px;
+
   letter-spacing: 1px;
+}
+
+.scatter-y-label {
+  position: absolute;
+
+  left: 8px;
+  top: 5px;
+
+  transform:none;
+
+  color:
+    rgba(255,255,255,0.3);
+
+  font-size: 8px;
+
+  letter-spacing: 0.8px;
+
+  writing-mode:
+    vertical-rl;
+}
+
+.scatter-y-low {
+  position: absolute;
+
+  left: 8px;
+  bottom: 5px;
+
+  transform:
+    none;
+
+  color:
+    rgba(255,255,255,0.25);
+
+  font-size: 8px;
+
+  letter-spacing: 0.8px;
+
+  writing-mode:
+    vertical-rl;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+
+  .relationship-chart {
+    height: 260px;
+  }
+
+  .scatter-tooltip {
+    width: 125px;
+  }
+
+  .scatter-axis {
+    font-size: 8px;
+  }
 }
 
 
@@ -3581,5 +3880,651 @@ button {
 
   .insight-grid {
     grid-template-columns: 1fr;
+  }
+}
+/* =========================================================
+   FIFTH ANALYTICS ROW
+   CATCHMENT REACH + CANNIBALIZATION
+========================================================= */
+
+.fifth-chart-row {
+  margin-top: 22px;
+}
+
+.reach-card,
+.risk-card {
+  min-height: 390px;
+}
+
+
+/* =========================
+   250M VISITOR COVERAGE
+========================= */
+
+.reach-visual {
+  min-height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 45px;
+}
+
+.reach-donut {
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  box-shadow:
+    0 0 25px rgba(0, 245, 255, 0.18),
+    0 0 60px rgba(0, 140, 255, 0.08);
+}
+
+.reach-donut::before {
+  content: "";
+  position: absolute;
+  width: 145px;
+  height: 145px;
+  border-radius: 50%;
+  background: #050914;
+
+  box-shadow:
+    inset 0 0 25px rgba(0, 245, 255, 0.08);
+}
+
+.reach-center {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.reach-center strong {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--cyan);
+
+  text-shadow:
+    0 0 15px rgba(0, 245, 255, 0.5);
+}
+
+.reach-center span {
+  margin-top: 5px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.55);
+
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.reach-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.reach-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.cyan-dot {
+  background: var(--cyan);
+
+  box-shadow:
+    0 0 12px rgba(0, 245, 255, 0.7);
+}
+
+.muted-dot {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.reach-legend-item div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.reach-legend-item strong {
+  font-size: 17px;
+  color: #ffffff;
+}
+
+.reach-legend-item span {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.reach-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding-top: 18px;
+
+  border-top:
+    1px solid rgba(255, 255, 255, 0.07);
+
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 11px;
+}
+
+.metric-pill {
+  padding: 7px 12px;
+
+  border-radius: 20px;
+
+  background:
+    rgba(0, 245, 255, 0.08);
+
+  border:
+    1px solid rgba(0, 245, 255, 0.25);
+
+  color: var(--cyan);
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+}
+
+
+/* =========================
+   CANNIBALIZATION RISK
+========================= */
+
+.danger-badge {
+  color: #ff8a00 !important;
+
+  border-color:
+    rgba(255, 138, 0, 0.3) !important;
+
+  background:
+    rgba(255, 138, 0, 0.08) !important;
+}
+
+.risk-distribution {
+  display: flex;
+  flex-direction: column;
+
+  gap: 22px;
+
+  padding: 20px 0;
+}
+
+.risk-level {
+  position: relative;
+}
+
+.risk-level-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 9px;
+}
+
+.risk-level-header span {
+  font-size: 13px;
+  font-weight: 600;
+
+  color:
+    rgba(255, 255, 255, 0.78);
+}
+
+.risk-level-header strong {
+  font-size: 13px;
+  color: #ffffff;
+}
+
+.risk-track {
+  height: 9px;
+
+  border-radius: 20px;
+
+  overflow: hidden;
+
+  background:
+    rgba(255, 255, 255, 0.06);
+}
+
+.risk-fill {
+  height: 100%;
+
+  border-radius: inherit;
+
+  transition:
+    width 0.8s ease;
+}
+
+.risk-high {
+  background:
+    linear-gradient(
+      90deg,
+      #ff006e,
+      #ff4d00
+    );
+
+  box-shadow:
+    0 0 15px rgba(255, 0, 110, 0.35);
+}
+
+.risk-medium {
+  background:
+    linear-gradient(
+      90deg,
+      #ff8a00,
+      #ffd000
+    );
+}
+
+.risk-low {
+  background:
+    linear-gradient(
+      90deg,
+      #00ff9c,
+      #00d4ff
+    );
+}
+
+.risk-percentage {
+  margin-top: 6px;
+
+  font-size: 10px;
+
+  color:
+    rgba(255, 255, 255, 0.38);
+
+  text-align: right;
+}
+
+.risk-summary {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 12px;
+
+  margin-top: 5px;
+}
+
+.risk-summary > div {
+  padding: 14px;
+
+  border-radius: 12px;
+
+  background:
+    rgba(255, 255, 255, 0.025);
+
+  border:
+    1px solid rgba(255, 255, 255, 0.06);
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 5px;
+}
+
+.risk-summary span {
+  font-size: 10px;
+
+  color:
+    rgba(255, 255, 255, 0.4);
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.5px;
+}
+
+.risk-summary strong {
+  font-size: 18px;
+  color: #ffffff;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+
+  .reach-visual {
+    gap: 25px;
+  }
+
+  .reach-donut {
+    width: 160px;
+    height: 160px;
+  }
+
+  .reach-donut::before {
+    width: 120px;
+    height: 120px;
+  }
+
+  .reach-center strong {
+    font-size: 25px;
+  }
+}
+
+@media (max-width: 650px) {
+
+  .reach-visual {
+    flex-direction: column;
+    gap: 25px;
+  }
+
+  .reach-legend {
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .risk-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .reach-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+/* =========================================================
+   STORE NETWORK RISK MATRIX
+========================================================= */
+
+.sixth-chart-row {
+  margin-top: 22px;
+}
+
+.network-risk-card {
+  width: 100%;
+}
+
+.network-risk-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.network-risk-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1.4fr 90px;
+  align-items: center;
+  gap: 20px;
+
+  padding: 15px 18px;
+
+  border-radius: 14px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,0.025),
+      rgba(255,255,255,0.012)
+    );
+
+  border:
+    1px solid rgba(255,255,255,0.055);
+
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    background 0.25s ease;
+}
+
+.network-risk-row:hover {
+  transform: translateX(5px);
+
+  border-color:
+    rgba(0,245,255,0.25);
+
+  background:
+    rgba(0,245,255,0.035);
+}
+
+.network-pair {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.network-index {
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+
+  background:
+    rgba(139,0,255,0.12);
+
+  border:
+    1px solid rgba(139,0,255,0.25);
+
+  color:
+    #b88cff;
+
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.network-stores {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  min-width: 0;
+}
+
+.network-stores strong {
+  color: #ffffff;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.network-stores span {
+  color:
+    rgba(255,255,255,0.35);
+
+  font-size: 12px;
+}
+
+.network-overlap {
+  width: 100%;
+}
+
+.network-overlap-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 7px;
+}
+
+.network-overlap-top span {
+  font-size: 10px;
+
+  color:
+    rgba(255,255,255,0.4);
+
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.network-overlap-top strong {
+  color: #ffffff;
+  font-size: 13px;
+}
+
+.network-track {
+  width: 100%;
+  height: 7px;
+
+  overflow: hidden;
+
+  border-radius: 20px;
+
+  background:
+    rgba(255,255,255,0.06);
+}
+
+.network-fill {
+  height: 100%;
+  border-radius: inherit;
+
+  transition:
+    width 0.8s ease;
+}
+
+.network-high {
+  background:
+    linear-gradient(
+      90deg,
+      #ff006e,
+      #ff4d00
+    );
+
+  box-shadow:
+    0 0 14px rgba(255,0,110,0.4);
+}
+
+.network-medium {
+  background:
+    linear-gradient(
+      90deg,
+      #ff8a00,
+      #ffd000
+    );
+
+  box-shadow:
+    0 0 12px rgba(255,138,0,0.3);
+}
+
+.network-low {
+  background:
+    linear-gradient(
+      90deg,
+      #00ff9c,
+      #00d4ff
+    );
+}
+
+.network-risk-badge {
+  justify-self: end;
+
+  min-width: 65px;
+
+  padding: 7px 10px;
+
+  border-radius: 20px;
+
+  text-align: center;
+
+  font-size: 9px;
+  font-weight: 800;
+
+  letter-spacing: 0.8px;
+}
+
+.network-risk-badge.network-high {
+  color: #ff4d6d;
+
+  background:
+    rgba(255,0,110,0.08);
+
+  border:
+    1px solid rgba(255,0,110,0.25);
+}
+
+.network-risk-badge.network-medium {
+  color: #ffb000;
+
+  background:
+    rgba(255,138,0,0.08);
+
+  border:
+    1px solid rgba(255,138,0,0.25);
+}
+
+.network-risk-badge.network-low {
+  color: #00ff9c;
+
+  background:
+    rgba(0,255,156,0.07);
+
+  border:
+    1px solid rgba(0,255,156,0.22);
+}
+
+.network-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-top: 18px;
+  padding-top: 15px;
+
+  border-top:
+    1px solid rgba(255,255,255,0.06);
+}
+
+.network-footer span {
+  max-width: 70%;
+
+  color:
+    rgba(255,255,255,0.38);
+
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.network-footer strong {
+  color: var(--cyan);
+
+  font-size: 11px;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 800px) {
+
+  .network-risk-row {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .network-risk-badge {
+    justify-self: start;
+  }
+
+  .network-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .network-footer span {
+    max-width: 100%;
   }
 }

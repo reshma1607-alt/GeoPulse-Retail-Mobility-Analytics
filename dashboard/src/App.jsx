@@ -372,6 +372,49 @@ function App() {
         ).toLowerCase() === 'high'
     )
     .slice(0, 5)
+    // Combine hourly records into one value per hour
+  const hourlySummary = useMemo(() => {
+    const grouped = {}
+
+    hourlyData.forEach((row) => {
+      const rawHour =
+        row.Hour ??
+        row.hour ??
+        row.HourOfDay
+
+      const hour = Number(
+        String(rawHour ?? '0')
+          .replace(':00', '')
+      )
+
+      const value = numberValue(
+        row.UniqueVisitors ??
+        row.Visitors ??
+        row.Footfall ??
+        row.GPSObservations
+      )
+
+      if (!grouped[hour]) {
+        grouped[hour] = 0
+      }
+
+      grouped[hour] += value
+    })
+
+    return Array.from(
+      { length: 24 },
+      (_, hour) => ({
+        hour,
+        value: grouped[hour] || 0
+      })
+    )
+  }, [hourlyData])
+  const peakHourData =
+  hourlySummary.length > 0
+    ? [...hourlySummary].sort(
+        (a, b) => b.value - a.value
+      )[0]
+    : null
     /* =======================================================
      EXECUTIVE INSIGHTS
      ======================================================= */
@@ -1719,49 +1762,48 @@ function App() {
     </div>
 
     <div className="hourly-advanced-chart">
-      {hourlyData.map((row, index) => {
-        const value = numberValue(
-          row.UniqueVisitors ??
-          row.Visitors ??
-          row.Footfall ??
-          row.GPSObservations
-        );
+  {hourlySummary.map((row, index) => {
 
-        const values = hourlyData.map((item) =>
-          numberValue(
-            item.UniqueVisitors ??
-            item.Visitors ??
-            item.Footfall ??
-            item.GPSObservations
-          )
-        );
+    const maxValue = Math.max(
+      ...hourlySummary.map(
+        (item) => item.value
+      ),
+      1
+    )
 
-        const maxValue = Math.max(...values, 1);
-        const height = Math.max((value / maxValue) * 100, 5);
+    const height = Math.max(
+      (row.value / maxValue) * 100,
+      row.value > 0 ? 5 : 0
+    )
 
-        return (
-          <div className="hour-column" key={index}>
-            <div className="hour-value">
-              {formatNumber(value)}
-            </div>
+    return (
+      <div
+        className="hour-column"
+        key={row.hour}
+      >
 
-            <div className="hour-bar-area">
-              <div
-                className={`hour-bar hour-color-${index % 5}`}
-                style={{ height: `${height}%` }}
-              ></div>
-            </div>
+        <div className="hour-value">
+          {formatNumber(row.value)}
+        </div>
 
-            <span>
-              {row.Hour ??
-                row.hour ??
-                row.HourOfDay ??
-                `${index}:00`}
-            </span>
-          </div>
-        );
-      })}
-    </div>
+        <div className="hour-bar-area">
+          <div
+            className={`hour-bar hour-color-${index % 5}`}
+            style={{
+              height: `${height}%`
+            }}
+          ></div>
+        </div>
+
+        <span>
+          {String(row.hour).padStart(2, '0')}
+        </span>
+
+      </div>
+    )
+  })}
+</div>
+    
   </div>
 
   {/* PEAK INTELLIGENCE */}
@@ -1775,12 +1817,21 @@ function App() {
     </div>
 
     <div className="peak-stat">
-      <span>PEAK TRAFFIC</span>
-      <strong>
-        {maxFootfall > 0 ? formatNumber(maxFootfall) : "0"}
-      </strong>
-      <small>maximum observed store activity</small>
-    </div>
+  <span>PEAK TRAFFIC</span>
+
+  <strong>
+    {peakHourData
+      ? formatNumber(peakHourData.value)
+      : "0"}
+  </strong>
+
+  <small>
+    Peak activity at{" "}
+    {peakHourData
+      ? `${String(peakHourData.hour).padStart(2, "0")}:00`
+      : "--"}
+  </small>
+</div>
 
     <div className="peak-metrics">
       <div>
@@ -1814,44 +1865,89 @@ function App() {
     </div>
 
     <div className="relationship-chart">
-      {stores.map((store, index) => {
-        const visitors = numberValue(store.UniqueVisitors);
-        const footfall = numberValue(store.GPSObservations);
 
-        const maxVisitors = Math.max(
-          ...stores.map((s) => numberValue(s.UniqueVisitors)),
-          1
-        );
+  {stores.map((store, index) => {
 
-        const left = (visitors / maxVisitors) * 88 + 4;
+    const visitors = numberValue(
+      store.UniqueVisitors
+    )
 
-        return (
-          <div className="relationship-point" key={storeName(store)}>
-            <div
-              className={`scatter-point scatter-${index % 5}`}
-              style={{ left: `${Math.min(left, 94)}%` }}
-            >
-              <span>{index + 1}</span>
-            </div>
+    const footfall = numberValue(
+      store.GPSObservations
+    )
 
-            <div className="scatter-tooltip">
-              <strong>{storeName(store)}</strong>
-              <span>
-                Visitors: {formatNumber(visitors)}
-              </span>
-              <span>
-                Footfall: {formatNumber(footfall)}
-              </span>
-            </div>
-          </div>
-        );
-      })}
+    const maxVisitors = Math.max(
+      ...stores.map((s) =>
+        numberValue(s.UniqueVisitors)
+      ),
+      1
+    )
 
-      <div className="scatter-axis">
-        <span>LOW VISITORS</span>
-        <span>HIGH VISITORS</span>
+    const maxFootfallValue = Math.max(
+      ...stores.map((s) =>
+        numberValue(s.GPSObservations)
+      ),
+      1
+    )
+
+    const left =
+      6 +
+      (visitors / maxVisitors) * 88
+
+    const bottom =
+      8 +
+      (footfall / maxFootfallValue) * 82
+
+    return (
+      <div
+        className="relationship-point"
+        key={storeName(store)}
+        style={{
+          left: `${Math.min(left, 94)}%`,
+          bottom: `${Math.min(bottom, 92)}%`
+        }}
+      >
+
+        <div
+          className={`scatter-point scatter-${index % 5}`}
+        >
+          <span>{index + 1}</span>
+        </div>
+
+        <div className="scatter-tooltip">
+
+          <strong>
+            {storeName(store)}
+          </strong>
+
+          <span>
+            Visitors: {formatNumber(visitors)}
+          </span>
+
+          <span>
+            Footfall: {formatNumber(footfall)}
+          </span>
+
+        </div>
+
       </div>
-    </div>
+    )
+  })}
+
+  <div className="scatter-y-label">
+    HIGH FOOTFALL
+  </div>
+
+  <div className="scatter-y-low">
+    LOW FOOTFALL
+  </div>
+
+  <div className="scatter-axis">
+    <span>LOW VISITORS</span>
+    <span>HIGH VISITORS</span>
+  </div>
+
+</div>
   </div>
 
 
@@ -1983,6 +2079,7 @@ function App() {
   </div>
 
 
+
   {/* CATCHMENT SUMMARY */}
   <div className="analytics-chart-card catchment-summary-card">
     <div className="chart-card-header">
@@ -2021,6 +2118,293 @@ function App() {
         <strong>{totalPairs}</strong>
       </div>
     </div>
+  </div>
+
+</div>
+{/* =========================================================
+    FIFTH ANALYTICS ROW
+========================================================= */}
+
+<div className="analytics-chart-grid fifth-chart-row">
+
+  {/* 250m Visitor Coverage */}
+  <div className="analytics-chart-card reach-card">
+
+    <div className="analytics-card-header">
+      <div>
+        <span className="analytics-kicker">CATCHMENT REACH</span>
+        <h3>250m Visitor Coverage</h3>
+      </div>
+
+      <span className="analytics-badge">SPATIAL</span>
+    </div>
+
+    <div className="reach-visual">
+
+      <div
+        className="reach-donut"
+        style={{
+          background: `conic-gradient(
+            var(--cyan) ${averageWithin250m}%,
+            rgba(255,255,255,0.08) ${averageWithin250m}% 100%
+          )`
+        }}
+      >
+        <div className="reach-center">
+          <strong>{averageWithin250m.toFixed(1)}%</strong>
+          <span>Within 250m</span>
+        </div>
+      </div>
+
+      <div className="reach-legend">
+
+        <div className="reach-legend-item">
+          <span className="legend-dot cyan-dot"></span>
+          <div>
+            <strong>{averageWithin250m.toFixed(1)}%</strong>
+            <span>Covered visitors</span>
+          </div>
+        </div>
+
+        <div className="reach-legend-item">
+          <span className="legend-dot muted-dot"></span>
+          <div>
+            <strong>{(100 - averageWithin250m).toFixed(1)}%</strong>
+            <span>Outside 250m</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div className="reach-footer">
+      <span>Average spatial reach across stores</span>
+      <span className="metric-pill">
+        {averageWithin250m >= 70 ? 'STRONG REACH' : 'REVIEW REACH'}
+      </span>
+    </div>
+
+  </div>
+
+
+  {/* Cannibalization Distribution */}
+  <div className="analytics-chart-card risk-card">
+
+    <div className="analytics-card-header">
+      <div>
+        <span className="analytics-kicker">NETWORK RISK</span>
+        <h3>Cannibalization Distribution</h3>
+      </div>
+
+      <span className="analytics-badge danger-badge">RISK</span>
+    </div>
+
+    <div className="risk-distribution">
+
+      {[
+        {
+          label: 'High',
+          value: cannibalization.filter(
+            item =>
+              String(item.CannibalizationIndicator || '')
+                .toLowerCase() === 'high'
+          ).length,
+          className: 'risk-high'
+        },
+        {
+          label: 'Medium',
+          value: cannibalization.filter(
+            item =>
+              String(item.CannibalizationIndicator || '')
+                .toLowerCase() === 'medium'
+          ).length,
+          className: 'risk-medium'
+        },
+        {
+          label: 'Low',
+          value: cannibalization.filter(
+            item =>
+              String(item.CannibalizationIndicator || '')
+                .toLowerCase() === 'low'
+          ).length,
+          className: 'risk-low'
+        }
+      ].map(item => {
+
+        const percentage =
+          cannibalization.length > 0
+            ? (item.value / cannibalization.length) * 100
+            : 0
+
+        return (
+          <div className="risk-level" key={item.label}>
+
+            <div className="risk-level-header">
+              <span>{item.label}</span>
+              <strong>{item.value} pairs</strong>
+            </div>
+
+            <div className="risk-track">
+              <div
+                className={`risk-fill ${item.className}`}
+                style={{ width: `${percentage}%` }}
+              />
+            </div>
+
+            <div className="risk-percentage">
+              {percentage.toFixed(1)}%
+            </div>
+
+          </div>
+        )
+      })}
+
+    </div>
+
+    <div className="risk-summary">
+      <div>
+        <span>Analyzed pairs</span>
+        <strong>{cannibalization.length}</strong>
+      </div>
+
+      <div>
+        <span>High signal</span>
+        <strong>{highCannibalization}</strong>
+      </div>
+
+      <div>
+        <span>Average overlap</span>
+        <strong>{averageOverlap.toFixed(1)}%</strong>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+{/* =========================================================
+    SIXTH ANALYTICS ROW
+========================================================= */}
+
+<div className="analytics-chart-grid sixth-chart-row">
+
+  <div className="analytics-chart-card network-risk-card">
+
+    <div className="analytics-card-header">
+      <div>
+        <span className="analytics-kicker">
+          NETWORK INTELLIGENCE
+        </span>
+
+        <h3>Store Network Risk Matrix</h3>
+      </div>
+
+      <span className="analytics-badge danger-badge">
+        OVERLAP
+      </span>
+    </div>
+
+    <div className="network-risk-list">
+
+      {topOverlapPairs.map((pair, index) => {
+
+        const overlap = numberValue(
+          pair.OverlapPercentage
+        );
+
+        const risk =
+          overlap >= 80
+            ? 'HIGH'
+            : overlap >= 50
+              ? 'MEDIUM'
+              : 'LOW';
+
+        const riskClass =
+          risk === 'HIGH'
+            ? 'network-high'
+            : risk === 'MEDIUM'
+              ? 'network-medium'
+              : 'network-low';
+
+        return (
+          <div
+            className="network-risk-row"
+            key={`${pair.StoreA}-${pair.StoreB}-${index}`}
+          >
+
+            <div className="network-pair">
+
+              <span className="network-index">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+
+              <div className="network-stores">
+
+                <strong>
+                  {pair.StoreA}
+                </strong>
+
+                <span>↔</span>
+
+                <strong>
+                  {pair.StoreB}
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <div className="network-overlap">
+
+              <div className="network-overlap-top">
+                <span>Visitor Overlap</span>
+
+                <strong>
+                  {overlap.toFixed(1)}%
+                </strong>
+              </div>
+
+              <div className="network-track">
+
+                <div
+                  className={`network-fill ${riskClass}`}
+                  style={{
+                    width: `${Math.min(
+                      overlap,
+                      100
+                    )}%`
+                  }}
+                />
+
+              </div>
+
+            </div>
+
+
+            <div className={`network-risk-badge ${riskClass}`}>
+              {risk}
+            </div>
+
+          </div>
+        );
+      })}
+
+    </div>
+
+    <div className="network-footer">
+
+      <span>
+        Higher visitor overlap indicates stronger spatial
+        interaction between store catchments.
+      </span>
+
+      <strong>
+        {topOverlapPairs.length} pairs analyzed
+      </strong>
+
+    </div>
+
   </div>
 
 </div>
