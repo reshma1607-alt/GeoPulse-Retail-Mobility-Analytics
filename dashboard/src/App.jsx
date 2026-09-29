@@ -415,6 +415,44 @@ function App() {
         (a, b) => b.value - a.value
       )[0]
     : null
+  const visitorFootfallAverage =
+  stores.length > 0
+    ? stores.reduce(
+        (sum, store) =>
+          sum +
+          numberValue(store.UniqueVisitors),
+        0
+      ) / stores.length
+    : 0
+
+const footfallAverage =
+  stores.length > 0
+    ? stores.reduce(
+        (sum, store) =>
+          sum +
+          numberValue(store.GPSObservations),
+        0
+      ) / stores.length
+    : 0
+
+const highVisitorHighFootfall =
+  stores.filter(
+    (store) =>
+      numberValue(store.UniqueVisitors) >=
+        visitorFootfallAverage &&
+      numberValue(store.GPSObservations) >=
+        footfallAverage
+  ).length
+
+const lowVisitorHighFootfall =
+  stores.filter(
+    (store) =>
+      numberValue(store.UniqueVisitors) <
+        visitorFootfallAverage &&
+      numberValue(store.GPSObservations) >=
+        footfallAverage
+  ).length
+  
     /* =======================================================
      EXECUTIVE INSIGHTS
      ======================================================= */
@@ -1946,6 +1984,70 @@ function App() {
     <span>LOW VISITORS</span>
     <span>HIGH VISITORS</span>
   </div>
+  <div className="scatter-legend">
+  {stores.map((store, index) => (
+    <div
+      className="scatter-legend-item"
+      key={`legend-${storeName(store)}`}
+    >
+      <span
+        className={`legend-store-dot scatter-${index % 5}`}
+      >
+        {index + 1}
+      </span>
+
+      <span>
+        {storeName(store)}
+      </span>
+    </div>
+  ))}
+</div>
+<div className="relationship-summary">
+
+  <div className="relationship-summary-title">
+    <span className="chart-label">
+      RELATIONSHIP INTELLIGENCE
+    </span>
+
+    <strong>
+      Store Activity Segmentation
+    </strong>
+  </div>
+
+  <div className="relationship-summary-grid">
+
+    <div className="relationship-summary-item summary-green">
+      <span>HIGH VISITORS + HIGH FOOTFALL</span>
+      <strong>{highVisitorHighFootfall}</strong>
+      <small>stores</small>
+    </div>
+
+    <div className="relationship-summary-item summary-orange">
+      <span>LOW VISITORS + HIGH FOOTFALL</span>
+      <strong>{lowVisitorHighFootfall}</strong>
+      <small>stores</small>
+    </div>
+
+    <div className="relationship-summary-item summary-blue">
+      <span>AVERAGE VISITORS</span>
+      <strong>
+        {formatNumber(visitorFootfallAverage)}
+      </strong>
+      <small>per store</small>
+    </div>
+
+    <div className="relationship-summary-item summary-purple">
+      <span>AVERAGE FOOTFALL</span>
+      <strong>
+        {formatNumber(footfallAverage)}
+      </strong>
+      <small>per store</small>
+    </div>
+
+  </div>
+
+</div>
+
 
 </div>
   </div>
@@ -1962,32 +2064,53 @@ function App() {
     </div>
 
     <div className="cannibal-bars">
-      {highPairs.slice(0, 8).map((pair, index) => {
+      {cannibalization.slice(0, 8).map((pair, index) => {
         const overlap = numberValue(
           pair.OverlapPercentage ??
           pair.Overlap_Percentage ??
           pair.Overlap
         );
+        const risk =
+  overlap >= 80
+    ? 'HIGH'
+    : overlap >= 50
+      ? 'MEDIUM'
+      : 'LOW';
+
+const riskClass =
+  risk === 'HIGH'
+    ? 'risk-high'
+    : risk === 'MEDIUM'
+      ? 'risk-medium'
+      : 'risk-low';
 
         return (
           <div className="cannibal-row" key={index}>
-            <div className="cannibal-label">
-              <span>
-                {pair.StoreA} <b>↔</b> {pair.StoreB}
-              </span>
 
-              <strong>{overlap.toFixed(1)}%</strong>
-            </div>
+  <div className="cannibal-label">
+    <span>
+      {pair.StoreA} <b>↔</b> {pair.StoreB}
+    </span>
 
-            <div className="cannibal-track">
-              <div
-                className={`cannibal-fill cannibal-fill-${index % 5}`}
-                style={{
-                  width: `${Math.min(overlap, 100)}%`
-                }}
-              ></div>
-            </div>
-          </div>
+    <strong>
+      {overlap.toFixed(1)}%
+    </strong>
+  </div>
+
+  <div className="cannibal-track">
+    <div
+      className={`cannibal-fill ${riskClass}`}
+      style={{
+        width: `${Math.min(overlap, 100)}%`
+      }}
+    ></div>
+  </div>
+
+  <span className={`cannibal-risk ${riskClass}`}>
+    {risk}
+  </span>
+
+</div>
         );
       })}
     </div>
