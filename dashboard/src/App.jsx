@@ -1696,17 +1696,26 @@ const lowVisitorHighFootfall =
 
       
       <section className="advanced-analytics">
-  <div className="section-heading">
+
+  <div className="advanced-header">
     <div>
-      <span className="section-kicker">ADVANCED ANALYTICS</span>
-      <h2>Retail Mobility Intelligence</h2>
-      <p>Interactive visual analysis of store traffic, visitors and spatial behavior.</p>
+      <span className="chart-label">ANALYTICS COMMAND CENTER</span>
+
+      <h2>Advanced Retail Intelligence</h2>
+
+      <p>
+        Explore visitor behavior, footfall patterns, spatial reach,
+        and store competition across the retail network.
+      </p>
     </div>
-    <div className="live-badge">● LIVE DATA</div>
+
+    <div className="advanced-status">
+      <span className="status-dot"></span>
+      LIVE ANALYTICS
+    </div>
   </div>
 
   <div className="analytics-chart-grid">
-
     {/* Visitor Share */}
     <div className="analytics-chart-card">
       <div className="chart-card-header">
