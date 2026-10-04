@@ -2073,55 +2073,56 @@ const lowVisitorHighFootfall =
     </div>
 
     <div className="cannibal-bars">
-      {cannibalization.slice(0, 8).map((pair, index) => {
-        const overlap = numberValue(
-          pair.OverlapPercentage ??
-          pair.Overlap_Percentage ??
-          pair.Overlap
-        );
-        const risk =
-  overlap >= 80
-    ? 'HIGH'
-    : overlap >= 50
-      ? 'MEDIUM'
-      : 'LOW';
+     {topOverlapPairs.map((pair, index) => {
+  const overlap = numberValue(
+    pair.OverlapPercentage ??
+    pair.Overlap_Percentage ??
+    pair.Overlap
+  );
 
-const riskClass =
-  risk === 'HIGH'
-    ? 'risk-high'
-    : risk === 'MEDIUM'
-      ? 'risk-medium'
-      : 'risk-low';
+  const risk =
+    overlap >= 80
+      ? 'HIGH'
+      : overlap >= 50
+        ? 'MEDIUM'
+        : 'LOW';
 
-        return (
-          <div className="cannibal-row" key={index}>
+  const riskClass =
+    risk === 'HIGH'
+      ? 'risk-high'
+      : risk === 'MEDIUM'
+        ? 'risk-medium'
+        : 'risk-low';
 
-  <div className="cannibal-label">
-    <span>
-      {pair.StoreA} <b>↔</b> {pair.StoreB}
-    </span>
+  return (
+    <div className="cannibal-row" key={index}>
 
-    <strong>
-      {overlap.toFixed(1)}%
-    </strong>
-  </div>
+      <div className="cannibal-label">
+        <span>
+          {pair.StoreA} <b>↔</b> {pair.StoreB}
+        </span>
 
-  <div className="cannibal-track">
-    <div
-      className={`cannibal-fill ${riskClass}`}
-      style={{
-        width: `${Math.min(overlap, 100)}%`
-      }}
-    ></div>
-  </div>
+        <strong>
+          {overlap.toFixed(1)}%
+        </strong>
+      </div>
 
-  <span className={`cannibal-risk ${riskClass}`}>
-    {risk}
-  </span>
+      <div className="cannibal-track">
+        <div
+          className={`cannibal-fill ${riskClass}`}
+          style={{
+            width: `${Math.min(overlap, 100)}%`
+          }}
+        />
+      </div>
 
-</div>
-        );
-      })}
+      <span className={`cannibal-risk ${riskClass}`}>
+        {risk}
+      </span>
+
+    </div>
+  );
+})}
     </div>
 
     <div className="cannibal-note">
@@ -2532,8 +2533,8 @@ const riskClass =
       </span>
 
       <strong>
-        {topOverlapPairs.length} pairs analyzed
-      </strong>
+  {visitorOverlap.length} pairs analyzed
+</strong>
 
     </div>
 
