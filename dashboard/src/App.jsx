@@ -694,8 +694,13 @@ const lowVisitorHighFootfall =
             </div>
 
             <strong>
-              {formatNumber(50000)}
-            </strong>
+  {formatNumber(
+    stores.reduce(
+      (sum, store) => sum + numberValue(store.GPSObservations),
+      0
+    )
+  )}
+</strong>
 
             <div className="kpi-bottom">
               <span className="positive">
@@ -730,8 +735,13 @@ const lowVisitorHighFootfall =
             </div>
 
             <strong>
-              {formatNumber(1000)}
-            </strong>
+  {formatNumber(
+    stores.reduce(
+      (sum, store) => sum + numberValue(store.UniqueVisitors),
+      0
+    )
+  )}
+</strong>
 
             <div className="kpi-bottom">
               <span className="positive">
@@ -1564,8 +1574,15 @@ const lowVisitorHighFootfall =
           </div>
 
           <div>
-            {stores.length} stores · 50,000 observations
-          </div>
+  {stores.length} stores ·{' '}
+  {formatNumber(
+    stores.reduce(
+      (sum, store) => sum + numberValue(store.GPSObservations),
+      0
+    )
+  )}{' '}
+  observations
+</div>
 
         </footer>
 

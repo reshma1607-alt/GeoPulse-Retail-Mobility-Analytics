@@ -6013,205 +6013,110 @@ button {
   }
 
 }
-
 .cannibal-risk {
-
   min-width: 72px;
-
   text-align: center;
-
-  padding: 5px 10px;
-
+  padding: 6px 12px;
   border-radius: 999px;
-
   font-size: 0.68rem;
-
   font-weight: 800;
-
   letter-spacing: 0.08em;
-
   border: 1px solid currentColor;
-
   background: rgba(255, 255, 255, 0.04);
-
   justify-self: end;
-
+  transition: all 0.25s ease;
 }
 
+/* HIGH RISK */
 .cannibal-risk.risk-high {
-
   color: #ff3b81;
-
   background: rgba(255, 59, 129, 0.12);
-
-  box-shadow: 0 0 12px rgba(255, 59, 129, 0.2);
-
+  box-shadow: 0 0 14px rgba(255, 59, 129, 0.22);
 }
 
+/* MEDIUM RISK */
 .cannibal-risk.risk-medium {
-
   color: #ffb000;
-
   background: rgba(255, 176, 0, 0.12);
-
-  box-shadow: 0 0 12px rgba(255, 176, 0, 0.2);
-
+  box-shadow: 0 0 14px rgba(255, 176, 0, 0.22);
 }
 
+/* LOW RISK */
 .cannibal-risk.risk-low {
-
   color: #00ff9c;
-
   background: rgba(0, 255, 156, 0.12);
-
-  box-shadow: 0 0 12px rgba(0, 255, 156, 0.2);
-
+  box-shadow: 0 0 14px rgba(0, 255, 156, 0.22);
 }
 
-.cannibal-row:nth-child(1) .cannibal-fill {
-
-  background: linear-gradient(90deg, #ff006e, #ff3b81);
-
-  box-shadow: 0 0 14px rgba(255, 0, 110, 0.45);
-
+/* Risk badge hover */
+.cannibal-risk:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.15);
 }
 
-.cannibal-row:nth-child(2) .cannibal-fill {
 
-  background: linear-gradient(90deg, #ff5f00, #ffc400);
-
-  box-shadow: 0 0 14px rgba(255, 150, 0, 0.45);
-
+/* CANNIBALIZATION BAR */
+.cannibal-fill {
+  height: 100%;
+  min-width: 3px;
+  border-radius: inherit;
+  transition:
+    width 0.5s ease,
+    box-shadow 0.3s ease,
+    filter 0.3s ease;
 }
 
-.cannibal-row:nth-child(3) .cannibal-fill {
-
-  background: linear-gradient(90deg, #008cff, #00f5ff);
-
-  box-shadow: 0 0 14px rgba(0, 245, 255, 0.45);
-
+/* HIGH */
+.cannibal-fill.risk-high {
+  background: linear-gradient(
+    90deg,
+    #ff006e,
+    #ff3b81
+  );
+  box-shadow:
+    0 0 14px rgba(255, 0, 110, 0.45),
+    0 0 28px rgba(255, 59, 129, 0.18);
 }
 
-.cannibal-row:nth-child(4) .cannibal-fill {
-
-  background: linear-gradient(90deg, #6a00ff, #ff00d4);
-
-  box-shadow: 0 0 14px rgba(139, 0, 255, 0.45);
-
+/* MEDIUM */
+.cannibal-fill.risk-medium {
+  background: linear-gradient(
+    90deg,
+    #ff5f00,
+    #ffc400
+  );
+  box-shadow:
+    0 0 14px rgba(255, 150, 0, 0.45),
+    0 0 28px rgba(255, 196, 0, 0.16);
 }
 
-.cannibal-row:nth-child(5) .cannibal-fill {
-
-  background: linear-gradient(90deg, #00c97b, #00ff9c);
-
-  box-shadow: 0 0 14px rgba(0, 255, 156, 0.45);
-
+/* LOW */
+.cannibal-fill.risk-low {
+  background: linear-gradient(
+    90deg,
+    #00c97b,
+    #00ff9c
+  );
+  box-shadow:
+    0 0 14px rgba(0, 255, 156, 0.45),
+    0 0 28px rgba(0, 255, 156, 0.16);
 }
 
-.cannibal-row:nth-child(6) .cannibal-fill {
 
-  background: linear-gradient(90deg, #ffd000, #fff000);
-
-  box-shadow: 0 0 14px rgba(255, 220, 0, 0.45);
-
+/* ROW HOVER */
+.cannibal-row {
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease;
 }
 
-.cannibal-row:nth-child(7) .cannibal-fill {
-
-  background: linear-gradient(90deg, #ff1744, #ff7043);
-
-  box-shadow: 0 0 14px rgba(255, 60, 60, 0.45);
-
+.cannibal-row:hover {
+  transform: translateX(4px);
 }
 
-.cannibal-row:nth-child(8) .cannibal-fill {
-
-  background: linear-gradient(90deg, #5f2cff, #b56cff);
-
-  box-shadow: 0 0 14px rgba(130, 70, 255, 0.45);
-
+.cannibal-row:hover .cannibal-fill {
+  filter: brightness(1.15);
 }
-
-.cannibal-row:nth-child(1) .cannibal-risk {
-
-  color: #ff3b81;
-
-  border-color: #ff3b81;
-
-  background: rgba(255, 0, 110, 0.10);
-
-}
-
-.cannibal-row:nth-child(2) .cannibal-risk {
-
-  color: #ff9d00;
-
-  border-color: #ff9d00;
-
-  background: rgba(255, 157, 0, 0.10);
-
-}
-
-.cannibal-row:nth-child(3) .cannibal-risk {
-
-  color: #00eaff;
-
-  border-color: #00eaff;
-
-  background: rgba(0, 234, 255, 0.10);
-
-}
-
-.cannibal-row:nth-child(4) .cannibal-risk {
-
-  color: #c16cff;
-
-  border-color: #c16cff;
-
-  background: rgba(139, 0, 255, 0.10);
-
-}
-
-.cannibal-row:nth-child(5) .cannibal-risk {
-
-  color: #00ff9c;
-
-  border-color: #00ff9c;
-
-  background: rgba(0, 255, 156, 0.10);
-
-}
-
-.cannibal-row:nth-child(6) .cannibal-risk {
-
-  color: #ffe000;
-
-  border-color: #ffe000;
-
-  background: rgba(255, 224, 0, 0.10);
-
-}
-
-.cannibal-row:nth-child(7) .cannibal-risk {
-
-  color: #ff625c;
-
-  border-color: #ff625c;
-
-  background: rgba(255, 70, 60, 0.10);
-
-}
-
-.cannibal-row:nth-child(8) .cannibal-risk {
-
-  color: #a970ff;
-
-  border-color: #a970ff;
-
-  background: rgba(95, 44, 255, 0.10);
-
-}
-
 .advanced-header {
 
   display: flex;
