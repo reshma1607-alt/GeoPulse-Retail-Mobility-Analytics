@@ -479,24 +479,13 @@ const lowVisitorHighFootfall =
         numberValue(b.OverlapPercentage) -
         numberValue(a.OverlapPercentage)
     )[0] || null
-
   const peakHour =
-    [...hourlyData].sort(
-      (a, b) =>
-        numberValue(
-          b.UniqueVisitors ??
-          b.Visitors ??
-          b.Footfall ??
-          b.GPSObservations
-        ) -
-        numberValue(
-          a.UniqueVisitors ??
-          a.Visitors ??
-          a.Footfall ??
-          a.GPSObservations
-        )
-    )[0] || null
-
+  hourlySummary.length > 0
+    ? [...hourlySummary].sort(
+        (a, b) => b.value - a.value
+      )[0]
+    : null
+   
   /* =======================================================
      RESET
      ======================================================= */
@@ -1677,23 +1666,15 @@ const lowVisitorHighFootfall =
       <div className="insight-content">
         <span>PEAK ACTIVITY</span>
         <strong>
-          {peakHour
-            ? peakHour.Hour ??
-              peakHour.hour ??
-              peakHour.HourOfDay ??
-              '—'
-            : '—'}
-        </strong>
-        <small>
-          {peakHour
-            ? `${formatNumber(
-                peakHour.UniqueVisitors ??
-                peakHour.Visitors ??
-                peakHour.Footfall ??
-                peakHour.GPSObservations
-              )} activity`
-            : 'No data available'}
-        </small>
+  {peakHour
+    ? `${String(peakHour.hour).padStart(2, '0')}:00`
+    : '—'}
+</strong>
+       <small>
+  {peakHour
+    ? `${formatNumber(peakHour.value)} activity`
+    : 'No data available'}
+</small>
       </div>
     </div>
 
