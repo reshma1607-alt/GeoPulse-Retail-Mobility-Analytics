@@ -4027,21 +4027,49 @@ button {
 @media (max-width: 700px) {
 
   .relationship-chart {
-
     height: 260px;
+    margin-top: 14px;
+    overflow: hidden;
+    background-size: 25% 25%;
+  }
 
+  .relationship-point {
+    width: 24px;
+    height: 24px;
+  }
+
+  .scatter-point {
+    width: 24px;
+    height: 24px;
+    font-size: 8px;
+    border-width: 1.5px;
+  }
+
+  .scatter-point:hover {
+    transform: scale(1.15);
   }
 
   .scatter-tooltip {
-
-    width: 125px;
-
+    display: none;
   }
 
   .scatter-axis {
-
     font-size: 8px;
+  }
 
+  .scatter-y-label,
+  .scatter-y-low {
+    font-size: 8px;
+  }
+
+  .scatter-legend {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .scatter-legend-item {
+    font-size: 9px;
   }
 
 }
@@ -5429,35 +5457,30 @@ button {
   margin-top: 18px;
 
 }
-
 .network-risk-row {
-
   display: grid;
-
-  grid-template-columns: minmax(180px,1.4fr) minmax(150px,1fr) auto;
-
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) 72px;
   align-items: center;
-
-  gap: 20px;
-
+  gap: 14px;
   padding: 15px 18px;
-
   border-radius: 14px;
 
   background: linear-gradient(
-      90deg,
-      rgba(255,255,255,0.025),
-      rgba(255,255,255,0.012)
-    );
+    90deg,
+    rgba(255,255,255,0.025),
+    rgba(255,255,255,0.012)
+  );
 
   border: 1px solid rgba(255,255,255,0.055);
 
-  transition: transform 0.25s ease,
+  transition:
+    transform 0.25s ease,
     border-color 0.25s ease,
     background 0.25s ease;
 
   min-height: 72px;
-
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .network-risk-row:hover {
@@ -6654,14 +6677,61 @@ button {
     text-align: left;
   }
 
-  .network-risk-row,
-  .cannibal-row {
-    grid-template-columns: 1fr;
+  .network-risk-row {
+  grid-template-columns: 1fr;
+}
+
+.cannibal-row {
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px 12px;
+  padding: 14px;
+}
+
+.cannibal-label {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+
+.cannibal-label span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cannibal-track {
+  min-width: 0;
+  width: 100%;
+  align-self: center;
+}
+
+.cannibal-risk {
+  justify-self: end;
+  align-self: center;
+}
+
+  .network-risk-badge {
+    justify-self: start;
   }
 
-  .network-risk-badge,
   .cannibal-risk {
-    justify-self: start;
+    justify-self: end;
+  }
+
+  .coverage-label {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .coverage-label span {
+    line-height: 1.4;
+  }
+
+  .coverage-label strong {
+    display: block;
+    font-size: 1.25rem;
+    color: var(--cyan);
   }
 }
 

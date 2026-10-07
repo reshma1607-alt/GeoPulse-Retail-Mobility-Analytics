@@ -973,17 +973,17 @@ const lowVisitorHighFootfall =
 
             <div className="intelligence-footer">
 
-              <div>
-                <span>
-                  250M CATCHMENT COVERAGE
-                </span>
+  <div className="coverage-label">
+    <span>
+      250M CATCHMENT COVERAGE
+    </span>
 
-                <strong>
-                  {averageWithin250m.toFixed(1)}%
-                </strong>
-              </div>
+    <strong>
+      {averageWithin250m.toFixed(1)}%
+    </strong>
+  </div>
 
-              <div className="signal-progress">
+  <div className="signal-progress">
                 <div
                   style={{
                     width: `${Math.min(
